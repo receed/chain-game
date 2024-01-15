@@ -27,8 +27,8 @@ function generate(acc) {
 			sign = randomSign(acc)
 		}
 		let b = getRandomInt(0, 9)
-		localStorage.setItem("sign", sign)
-		localStorage.setItem("b", b)
+		localStorage["sign"] = sign
+		localStorage["b"] = b
 		let result = eval(`${acc} ${sign} ${b}`)
 		if (!(result >= 0 && result == Math.floor(result) && result <= MAX_VALUE))
 			continue
@@ -41,10 +41,10 @@ function generate(acc) {
 }
 
 function updateExpr() {
-	let [exprRight, exprStr, result] = generate(localStorage.getItem("acc"));
-	localStorage.setItem("exprRight", exprRight)
-	localStorage.setItem("exprStr", exprStr)
-	localStorage.setItem("result", result)
+	let [exprRight, exprStr, result] = generate(localStorage["acc"]);
+	localStorage["exprRight"] = exprRight
+	localStorage["exprStr"] = exprStr
+	localStorage["result"] = result
 }
 
 function setResult(res) {
@@ -67,42 +67,42 @@ function priority(sign) {
 function check() {
 	let expr = document.getElementById("expr").innerText
 	let answer = document.getElementById("answer").value
-	let result = localStorage.getItem("result")
-	let hitCount = localStorage.getItem("hitCount")
-	let score = Number(localStorage.getItem("score"))
+	let result = localStorage["result"]
+	let hitCount = localStorage["hitCount"]
+	let score = Number(localStorage["score"])
 	if (answer == result) {
 		setResult("ok")
-		let longExpr = localStorage.getItem("longExpr")
+		let longExpr = localStorage["longExpr"]
 		// console.log(longExpr)
 		if (!longExpr)
-			longExpr = localStorage.getItem("acc").toString()
-		let sign = localStorage.getItem("sign")
-		let b = localStorage.getItem("b")
-		if (priority(sign) > priority(localStorage.getItem("lastSign"))) {
+			longExpr = localStorage["acc"].toString()
+		let sign = localStorage["sign"]
+		let b = localStorage["b"]
+		if (priority(sign) > priority(localStorage["lastSign"])) {
 			longExpr = `(${longExpr})`
 		}
 		longExpr += ` ${sign} ${b}`
-		localStorage.setItem("longExpr", longExpr)
+		localStorage["longExpr"] = longExpr
 		longExpr += ` = ${answer}`
-		localStorage.setItem("displayedLongExpr", longExpr)
-		localStorage.setItem("lastSign", sign)
+		localStorage["displayedLongExpr"] = longExpr
+		localStorage["lastSign"] = sign
 		
-		localStorage.setItem("prevAcc", localStorage.getItem("acc"))
-		localStorage.setItem("acc", answer)
+		localStorage["prevAcc"] = localStorage["acc"]
+		localStorage["acc"] = answer
 		score++
-		localStorage.setItem("score", score)
+		localStorage["score"] = score
 		
-		if (score > localStorage.getItem("bestScore")) {
-			localStorage.setItem("bestScore", score)
+		if (score > localStorage["bestScore"]) {
+			localStorage["bestScore"] = score
 		}
 		document.getElementById("answer").value = ""
 		updateExpr()
 	} else {
 		hitCount--
-		localStorage.setItem("hitCount", hitCount)
+		localStorage["hitCount"] = hitCount
 		setResult("fail")
 		if (hitCount == 0) {
-			localStorage.setItem("score", 0)
+			localStorage["score"] = 0
 			document.getElementById("ok").innerText += `, хиты закончились. Очки: ${score}. ${document.getElementById("expr").innerText} ${result}`
 			resetGame()
 		}
@@ -111,33 +111,34 @@ function check() {
 }
 
 function resetGame() {
-	localStorage.setItem("lastAcc", "")
-	localStorage.setItem("acc", getRandomInt(1, 9))
-	localStorage.setItem("longExpr", "")
-	localStorage.setItem("displayedLongExpr", "")
-	localStorage.setItem("lastSign", "")
-	localStorage.setItem("score", 0)
-	localStorage.setItem("hitCount", HIT_COUNT)
+	localStorage["lastAcc"] = ""
+	localStorage["acc"] = getRandomInt(1, 9)
+	localStorage["longExpr"] = ""
+	localStorage["displayedLongExpr"] = ""
+	localStorage["lastSign"] = ""
+	localStorage["score"] = 0
+	localStorage["hitCount"] = HIT_COUNT
 	updateExpr()
 	document.getElementById("answer").value = ""
 }
 
 function redraw() {
-	document.getElementById("hp").innerText = `${localStorage.getItem("hitCount")}/${HIT_COUNT}`
-	document.getElementById("best_score").innerText = localStorage.getItem("bestScore") ?? 0
-	document.getElementById("long_expr").innerText = localStorage.getItem("displayedLongExpr")
-	document.getElementById("score").innerText = localStorage.getItem("score")
-	document.getElementById("expr").textContent = localStorage.getItem("exprStr")
-	document.getElementById("expr-prev").textContent = localStorage.getItem("prevAcc")
-	document.getElementById("expr-left").textContent = localStorage.getItem("acc")
-	document.getElementById("expr-right").textContent = localStorage.getItem("exprRight")
-	console.log(localStorage.getItem("prevAcc"))
-	console.log(localStorage.getItem("acc"))
-	console.log(localStorage.getItem("exprRight"))
+	document.getElementById("hp").innerText = localStorage["hitCount"]
+	document.getElementById("hp_max").innerText = HIT_COUNT
+	document.getElementById("best_score").innerText = localStorage["bestScore"] ?? 0
+	document.getElementById("long_expr").innerText = localStorage["displayedLongExpr"]
+	document.getElementById("score").innerText = localStorage["score"]
+	document.getElementById("expr").textContent = localStorage["exprStr"]
+	document.getElementById("expr-prev").textContent = localStorage["prevAcc"]
+	document.getElementById("expr-left").textContent = localStorage["acc"]
+	document.getElementById("expr-right").textContent = localStorage["exprRight"]
+	console.log(localStorage["prevAcc"])
+	console.log(localStorage["acc"])
+	console.log(localStorage["exprRight"])
 }
 
 function setup() {
-	if (!Number(localStorage.getItem("hitCount")))
+	if (!Number(localStorage["hitCount"]))
 		resetGame()
 	redraw()
 	setResult("")
@@ -151,7 +152,7 @@ function setup() {
 		redraw()
 	})
 	document.getElementById("reset").addEventListener("click", () => {
-		localStorage.setItem("bestScore", 0)
+		localStorage["bestScore"] = 0
 		redraw()
 	})
 }
