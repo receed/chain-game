@@ -1,0 +1,22 @@
+p#expr-prev {
+  font-size: large;
+}
+
+p#expr-left {
+  color: red;
+  font-size: xxx-large;
+}
+
+p#expr-right {
+  color: blue;
+  font-size: xx-large;
+}
+
+p.expr {
+	margin: 0 auto;
+}
+
+input {
+    width: 10ch;
+}
+

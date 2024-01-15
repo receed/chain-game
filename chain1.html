@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<title>Игра</title>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href="styles.css" rel="stylesheet" type="text/css" />
+
+<script src="process.js" defer></script>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+<h1 align="center">Игра</h1>
+
+<div class="container" align="center">
+	<p class="expr" id="expr-prev"></p>
+	<p class="expr" id="expr-left"></p>
+	<p class="expr" id="expr-right"></p>
+
+	<div class="row">
+		<div class="input-field col s6 offset-s3">
+			<label id="expr" for="answer">:</label>
+			<input type="number" id="answer" name="answer" class="validate" pattern="[0-9]+" />
+		</div>
+	</div>
+
+	<div class="row">
+		<p id="ok"></p>
+	</div>
+
+	<div class="row">
+		<div class="button col s3 offset-s3">
+			<button id="check">Проверить</button>
+		</div>
+		<div class="col s3">
+			<button id="restart">Сначала</button>
+		</div>
+	</div>
+	<p id="long_expr"></p>
+	<p>Хиты: <text id="hp">0</text></p>
+	<p>Очки: <text id="score">0</text></p>
+	<p>Рекорд: <text id="best_score">0</text></p>
+	<button id="reset">Сбросить</button>
+</div>
+
+
+</body>
+</html>
