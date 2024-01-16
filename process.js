@@ -132,12 +132,13 @@ function redraw() {
 	document.getElementById("expr-prev").textContent = localStorage["prevAcc"]
 	document.getElementById("expr-left").textContent = localStorage["acc"]
 	document.getElementById("expr-right").textContent = localStorage["exprRight"]
-	console.log(localStorage["prevAcc"])
-	console.log(localStorage["acc"])
-	console.log(localStorage["exprRight"])
 }
 
 function setup() {
+  let inIframe = (window.location !== window.parent.location)
+  if (inIframe) {
+    document.getElementById("top-nav").style.display = "none"
+  }
 	if (!Number(localStorage["hitCount"]))
 		resetGame()
 	redraw()
@@ -147,14 +148,33 @@ function setup() {
 		if (event.keyCode == 13)
 			check()
 	})
-	document.getElementById("restart").addEventListener("click", () => {
+	document.getElementById("restart").onclick = function() {
 		resetGame()
 		redraw()
-	})
-	document.getElementById("reset").addEventListener("click", () => {
+	}
+	document.getElementById("reset").onclick = function() {
 		localStorage["bestScore"] = 0
 		redraw()
-	})
+	}
+
+  if (!inIframe) {
+    let host = "file:///home/receed/prog/game/"
+    document.getElementById("stable").onclick = function() {
+      document.getElementById("default-version").style.visibility = ""
+      document.getElementById("ext-version").style.visibility = "hidden"
+    }
+    document.getElementById("latest").onclick = function() {
+      document.getElementById("default-version").style.visibility = "hidden"
+      document.getElementById("ext-version").style.visibility = ""
+      document.getElementById("ext-version").src = host + "/master/chain1.html"
+    }
+    document.getElementById("dev").onclick = function() {
+      document.getElementById("default-version").style.visibility = "hidden"
+      document.getElementById("ext-version").style.visibility = ""
+      document.getElementById("ext-version").src = host + "/dev/chain1.html"
+    }
+  }
 }
 
+M.AutoInit();
 setup();
