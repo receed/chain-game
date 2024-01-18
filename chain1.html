@@ -24,8 +24,8 @@
 <nav id="top-nav" style="display: block">
   <div class="row">
     <div class="nav-wrapper col s10 offset-s1">
-      <a href="#" class="brand-logo">Игра</a>
-      <a class="dropdown-trigger right" href="#" data-target="version">Версия<i class="material-icons right">arrow_drop_down</i></a>
+      <a href="#" class="brand-logo">Игра-цепочка</a>
+      <a id="version-dropdown" class="dropdown-trigger right" href="#" data-target="version">Версия<i class="material-icons right">arrow_drop_down</i></a>
     </div>
   </div>
 </nav>
@@ -36,7 +36,7 @@
 <!--</div>-->
 
 <div id="default-version" class="container" align="center">
-  <h1 align="center">Игра</h1>
+  <h1 align="center">Игра-цепочка</h1>
   <p class="expr" id="expr-prev"></p>
   <p class="expr" id="expr-left"></p>
   <p class="expr" id="expr-right"></p>
@@ -49,7 +49,7 @@
   </div>
 
   <div class="row">
-    <p id="ok"></p>
+    <p id="ok" class="correct"></p>
   </div>
 
   <div class="row">
@@ -60,10 +60,10 @@
       <button id="restart">Сначала</button>
     </div>
   </div>
-  <p id="long_expr"></p>
-  <p>Хиты: <span id="hp">0</span>/<span id="hp_max">0</span></p>
+  <p id="long-expr"></p>
+  <p>Хиты: <span id="hp">0</span>/<span id="hp-max">0</span></p>
   <p>Очки: <span id="score">0</span></p>
-  <p>Рекорд: <span id="best_score">0</span></p>
+  <p>Рекорд: <span id="best-score">0</span></p>
   <button id="reset">Сбросить</button>
 </div>
 

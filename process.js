@@ -2,7 +2,7 @@ const MAX_VALUE = 100
 const HIT_COUNT = 3
 
 function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min
+	return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 function bernoulli(p) {
@@ -48,12 +48,24 @@ function updateExpr() {
 }
 
 function setResult(res) {
-	transform = {"ok": "Правильно!", "fail": "Неправильно", "": ""}
-	document.getElementById("ok").innerText = transform[res]
+	let elem = document.getElementById("ok")
+	if (res == "ok") {
+		elem.innerText = "Правильно!"
+		elem.className = "correct"
+		document.getElementById("hp").className = "correct"
+	} else if (res == "fail") {
+		elem.innerText = "Неправильно"
+		elem.className = "wrong"
+		document.getElementById("hp").className = "wrong"
+	} else {
+		elem.innerText = "Поехали!"
+		elem.className = "correct"
+		document.getElementById("hp").className = "correct"
+	}
 }
 
 function priority(sign) {
-	switch(sign) {
+	switch (sign) {
 		case '+':
 		case '-':
 			return 0;
@@ -62,10 +74,9 @@ function priority(sign) {
 			return 1;
 	}
 	return 2;
-}		
+}
 
 function check() {
-	let expr = document.getElementById("expr").innerText
 	let answer = document.getElementById("answer").value
 	let result = localStorage["result"]
 	let hitCount = localStorage["hitCount"]
@@ -86,12 +97,12 @@ function check() {
 		longExpr += ` = ${answer}`
 		localStorage["displayedLongExpr"] = longExpr
 		localStorage["lastSign"] = sign
-		
+
 		localStorage["prevAcc"] = localStorage["acc"]
 		localStorage["acc"] = answer
 		score++
 		localStorage["score"] = score
-		
+
 		if (score > localStorage["bestScore"]) {
 			localStorage["bestScore"] = score
 		}
@@ -111,7 +122,7 @@ function check() {
 }
 
 function resetGame() {
-	localStorage["lastAcc"] = ""
+	localStorage["prevAcc"] = ""
 	localStorage["acc"] = getRandomInt(1, 9)
 	localStorage["longExpr"] = ""
 	localStorage["displayedLongExpr"] = ""
@@ -124,9 +135,9 @@ function resetGame() {
 
 function redraw() {
 	document.getElementById("hp").innerText = localStorage["hitCount"]
-	document.getElementById("hp_max").innerText = HIT_COUNT
-	document.getElementById("best_score").innerText = localStorage["bestScore"] ?? 0
-	document.getElementById("long_expr").innerText = localStorage["displayedLongExpr"]
+	document.getElementById("hp-max").innerText = HIT_COUNT
+	document.getElementById("best-score").innerText = localStorage["bestScore"] ?? 0
+	document.getElementById("long-expr").innerText = localStorage["displayedLongExpr"]
 	document.getElementById("score").innerText = localStorage["score"]
 	document.getElementById("expr").textContent = localStorage["exprStr"]
 	document.getElementById("expr-prev").textContent = localStorage["prevAcc"]
@@ -135,12 +146,14 @@ function redraw() {
 }
 
 function setup() {
-  let inIframe = (window.location !== window.parent.location)
-  if (inIframe) {
-    document.getElementById("top-nav").style.display = "none"
-  }
-	if (!Number(localStorage["hitCount"]))
+	let inIframe = (window.location !== window.parent.location)
+	if (inIframe) {
+		document.getElementById("top-nav").style.display = "none"
+	}
+	if (!Number(localStorage["hitCount"])) {
 		resetGame()
+		setResult("")
+	}
 	redraw()
 	setResult("")
 	document.getElementById("check").addEventListener("click", check)
@@ -148,32 +161,44 @@ function setup() {
 		if (event.keyCode == 13)
 			check()
 	})
-	document.getElementById("restart").onclick = function() {
+	document.getElementById("restart").onclick = function () {
 		resetGame()
+		setResult("")
 		redraw()
 	}
-	document.getElementById("reset").onclick = function() {
+	document.getElementById("reset").onclick = function () {
 		localStorage["bestScore"] = 0
 		redraw()
 	}
 
-  if (!inIframe) {
-    let host = "file:///home/receed/prog/game/"
-    document.getElementById("stable").onclick = function() {
-      document.getElementById("default-version").style.visibility = ""
-      document.getElementById("ext-version").style.visibility = "hidden"
-    }
-    document.getElementById("latest").onclick = function() {
-      document.getElementById("default-version").style.visibility = "hidden"
-      document.getElementById("ext-version").style.visibility = ""
-      document.getElementById("ext-version").src = host + "/master/chain1.html"
-    }
-    document.getElementById("dev").onclick = function() {
-      document.getElementById("default-version").style.visibility = "hidden"
-      document.getElementById("ext-version").style.visibility = ""
-      document.getElementById("ext-version").src = host + "/dev/chain1.html"
-    }
-  }
+	if (!inIframe) {
+		// let host = "file:///home/receed/prog/game/"
+		let host = "http://109.172.84.96"
+		document.getElementById("stable").onclick = function () {
+			document.getElementById("default-version").style.visibility = ""
+			document.getElementById("ext-version").style.visibility = "hidden"
+		}
+		document.getElementById("latest").onclick = function () {
+			document.getElementById("default-version").style.visibility = "hidden"
+			document.getElementById("ext-version").style.visibility = ""
+			document.getElementById("ext-version").src = host + "/master/chain1.html"
+		}
+		document.getElementById("dev").onclick = function () {
+			document.getElementById("default-version").style.visibility = "hidden"
+			document.getElementById("ext-version").style.visibility = ""
+			document.getElementById("ext-version").src = host + "/dev/chain1.html"
+		}
+
+		document.querySelectorAll("#version>li>a").forEach((a) => {
+			let name = `Версия: ${a.innerText}`
+			if (a.id == "stable") {
+				document.getElementById("version-dropdown").innerText = name
+			}
+			a.addEventListener("click", () => {
+				document.getElementById("version-dropdown").innerText = name
+			})
+		})
+	}
 }
 
 M.AutoInit();
