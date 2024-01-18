@@ -146,7 +146,7 @@ function redraw() {
 }
 
 function setup() {
-	let inIframe = (window.location !== window.parent.location)
+	let inIframe = (window !== window.parent)
 	if (inIframe) {
 		document.getElementById("top-nav").style.display = "none"
 	}
