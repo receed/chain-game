@@ -171,7 +171,7 @@ function setup() {
 		redraw()
 	}
 
-	if (!inIframe) {
+	if (!inIframe && false) {
 		// let host = "file:///home/receed/prog/game/"
 		let host = "http://109.172.84.96"
 		document.getElementById("stable").onclick = function () {
