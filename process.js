@@ -9,8 +9,10 @@ function bernoulli(p) {
 	return Math.random() < p
 }
 
-function randomSign(acc) {
-	let probDecrease = 0.3 + (acc / MAX_VALUE) * 0.6
+function randomSign(acc, probDecrease) {
+	if (probDecrease === undefined) {
+		probDecrease = 0.3 + (acc / MAX_VALUE) * 0.6
+	}
 	if (bernoulli(probDecrease)) {
 		const PROB_DIV = 0.65
 		return bernoulli(PROB_DIV) ? '/' : '-'
@@ -19,23 +21,45 @@ function randomSign(acc) {
 }
 
 function generate(acc) {
-	let sign = randomSign(acc);
+	let probDecrease = localStorage["simpleCount"] >= 2 ? 0 : undefined
+	let sign = randomSign(acc, probDecrease)
 	for (let i = 0; ; i++) {
 		if (i > 100) {
 			i = 0;
 			// Не получается подобрать выражение с данным знаком. Странно
 			sign = randomSign(acc)
 		}
-		let b = getRandomInt(0, 9)
+		let lowerBound = 0
+		if (probDecrease == 0) {
+			if (sign == '*')
+				lowerBound = 2
+			else if (sign == '+')
+				lowerBound = 5
+		}
+		let b = getRandomInt(lowerBound, 9)
 		localStorage["sign"] = sign
 		localStorage["b"] = b
 		let result = eval(`${acc} ${sign} ${b}`)
 		if (!(result >= 0 && result == Math.floor(result) && result <= MAX_VALUE))
 			continue
+		if (result == acc || result == 0 || result == 1) {
+			if (localStorage["lastStupid"] < 6) {
+				sign = randomSign(acc);
+				continue
+			}
+			localStorage["lastStupid"] = 0
+		} else {
+			localStorage["lastStupid"]++
+		}
+		if (result <= 10) {
+			localStorage["simpleCount"]++
+		} else {
+			localStorage["simpleCount"] = 0
+		}
 		if (sign == '*')
 			sign = '×'
 		else if (sign == '/')
-			sign = '÷'
+			sign = ':'
 		return [`${sign} ${b}`, `${acc} ${sign} ${b} = `, result]
 	}
 }
@@ -82,7 +106,7 @@ function check() {
 	let hitCount = localStorage["hitCount"]
 	let score = Number(localStorage["score"])
 	if (answer == result) {
-		setResult("ok")
+		localStorage["checkResult"] = "ok"
 		let longExpr = localStorage["longExpr"]
 		// console.log(longExpr)
 		if (!longExpr)
@@ -111,7 +135,7 @@ function check() {
 	} else {
 		hitCount--
 		localStorage["hitCount"] = hitCount
-		setResult("fail")
+		localStorage["checkResult"] = "fail"
 		if (hitCount == 0) {
 			localStorage["score"] = 0
 			document.getElementById("ok").innerText += `, хиты закончились. Очки: ${score}. ${document.getElementById("expr").innerText} ${result}`
@@ -129,6 +153,8 @@ function resetGame() {
 	localStorage["lastSign"] = ""
 	localStorage["score"] = 0
 	localStorage["hitCount"] = HIT_COUNT
+	localStorage["lastStupid"] = 0
+	localStorage["simpleCount"] = 0
 	updateExpr()
 	document.getElementById("answer").value = ""
 }
@@ -143,6 +169,7 @@ function redraw() {
 	document.getElementById("expr-prev").textContent = localStorage["prevAcc"]
 	document.getElementById("expr-left").textContent = localStorage["acc"]
 	document.getElementById("expr-right").textContent = localStorage["exprRight"]
+	setResult(localStorage["checkResult"])
 }
 
 function setup() {
@@ -152,10 +179,9 @@ function setup() {
 	}
 	if (!Number(localStorage["hitCount"])) {
 		resetGame()
-		setResult("")
+		localStorage["checkResult"] = ""
 	}
 	redraw()
-	setResult("")
 	document.getElementById("check").addEventListener("click", check)
 	document.getElementById("answer").addEventListener("keyup", (event) => {
 		if (event.keyCode == 13)
@@ -163,7 +189,7 @@ function setup() {
 	})
 	document.getElementById("restart").onclick = function () {
 		resetGame()
-		setResult("")
+		localStorage["checkResult"] = ""
 		redraw()
 	}
 	document.getElementById("reset").onclick = function () {

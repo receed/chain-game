@@ -1,3 +1,8 @@
+body {
+  background: url(back.jpg) no-repeat center center fixed;
+  background-size: cover;
+}
+
 p#expr-prev {
   font-size: large;
 }
@@ -18,7 +23,7 @@ p.expr {
 
 p.wrong {
   color: red;
-  font-size: large;
+  font-size: xx-large;
 }
 
 span.wrong {
