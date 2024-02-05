@@ -3,21 +3,21 @@ body {
   background-size: cover;
 }
 
-p#expr-prev {
+#expr-prev {
   font-size: large;
 }
 
-p#expr-left {
+#expr-left {
   color: red;
   font-size: xxx-large;
 }
 
-p#expr-right {
+#expr-right {
   color: blue;
   font-size: xx-large;
 }
 
-p.expr {
+.expr {
   margin: 0 auto;
 }
 
@@ -28,4 +28,52 @@ p.wrong {
 
 span.wrong {
   color: red;
+  font-size: x-large;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+.wheel {
+  perspective: 500px;
+  /* border: 1px solid #333; */
+  margin: 50px;
+}
+.wheel .wheel-inner {
+  position: relative;
+  width: 200px;
+  height: 350px;
+  margin: 0;
+  transform-style: preserve-3d;
+  transition: all 1s;
+}
+.wheel .wheel-inner .wheel-segment {
+  border: 1px solid #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  background-color: #c6ff89;
+}
+
+.wheel-inner .wheel-segment:nth-child(odd) {
+  background-color: #94f8ff;
+}
+/* .wheel .wheel-inner .wheel-segment:nth-child(even) {
+  background-color: #ddd;
+} */
+
+@keyframes spin {
+  /* from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(30deg);
+  } */
 }

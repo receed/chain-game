@@ -35,16 +35,38 @@
 </iframe>
 <!--</div>-->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <div id="default-version" class="container" align="center">
   <h2 align="center">Игра-цепочка</h2>
-  <p class="expr" id="expr-prev"></p>
+  <!-- <p class="expr" id="expr-prev"></p>
   <p class="expr" id="expr-left"></p>
-  <p class="expr" id="expr-right"></p>
+  <p class="expr" id="expr-right"></p> -->
+
+  <div class="wheel">
+    <div class="wheel-inner">
+      <!-- <div class="wheel-segment">
+        <span class="expr" id="expr-prev"></span>
+      </div>
+      <div class="wheel-segment">
+        <span class="expr" id="expr-left"></span>
+      </div>
+      <div class="wheel-segment">
+        <span class="expr" id="expr-right"></span>
+      </div>
+      <div class="wheel-segment">
+        <span id="expr-next"></span>
+      </div> -->
+      <div class="wheel-segment">
+        <span></span>
+      </div>
+    </div>
+  </div>
 
   <div class="row">
     <div class="input-field col s6 offset-s3">
       <label id="expr" for="answer">:</label>
-      <input type="number" id="answer" name="answer" class="validate" pattern="[0-9]+" />
+      <input type="text" id="answer" name="answer" class="validate" pattern="[0-9]+([.,][0-9]+)?" />
     </div>
   </div>
 
@@ -60,13 +82,27 @@
       <button id="restart">Сначала</button>
     </div>
   </div>
-  <p id="long-expr"></p>
   <p>Хиты: <span id="hp">0</span>/<span id="hp-max">0</span></p>
   <p>Очки: <span id="score">0</span></p>
+  <p id="long-expr"></p>
   <p>Рекорд: <span id="best-score">0</span></p>
-  <button id="reset">Сбросить</button>
+  <button id="reset">Сбросить рекорд</button>
 
-
+  <!-- <div class="row">
+    <div class="col offset-s3">
+      <label>
+        <input name="level" id="1" type="radio" checked />
+        <span>Четвёртый класс</span>
+      </label>
+    </div>
+    <div class="col">
+      <label>
+        <input name="level" id="2" type="radio" />
+        <span>Шестой класс</span>
+      </label>
+    </div>
+  </div> -->
+</div>
 
 </body>
 </html>
