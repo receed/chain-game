@@ -78,14 +78,27 @@ function rotateSegments() {
 	segments[10].children[0].innerHTML = ""
 }
 
+function removeBlinking(elem) {
+	elem.style["animation-iteration-count"] = "10"
+	let listener = (event) => {
+		event.target.classList.remove("blinking")
+		event.target.removeEventListener("animationiteration", listener)
+	}
+	elem.addEventListener("animationiteration", listener)
+}
+
 function updateExpr() {
 	let [exprRight, exprStr, result] = generate(localStorage["acc"]);
 	localStorage["exprRight"] = exprRight
 	localStorage["exprStr"] = exprStr
 	localStorage["result"] = result
+	// segments[0].classList.remove("blinking")
+	removeBlinking(segments[0])
+	// segments[0].style.opacity = "1"
 	rotateSegments()
 	segments[0].children[0].innerText = exprRight
 	rotateSegments()
+	segments[0].classList.add("blinking")
 }
 
 function setResult(res) {
@@ -144,7 +157,7 @@ function check() {
 		score++
 		localStorage["score"] = score
 
-		if (score > localStorage["bestScore"]) {
+		if (localStorage === null || score > localStorage["bestScore"]) {
 			localStorage["bestScore"] = score
 		}
 		document.getElementById("answer").value = ""
@@ -168,7 +181,6 @@ function check() {
 		if (hitCount == 0) {
 			localStorage["score"] = 0
 			localStorage["failInfo"] = `, хиты закончились. Очки: ${score}. ${document.getElementById("expr").innerText} ${result}`
-			console.log("text: " + document.getElementById("ok").innerText)
 			resetGame()
 		}
 	}
@@ -193,7 +205,9 @@ function resetWheel() {
 		segment.style.height = `${height}px`	
 		segment.style.transform = transform
 		segment.children[0].innerHTML = ""
+		segment.classList.remove("blinking")
 	})
+	segments[0].classList.add("blinking")
 }
 
 function resetGame() {

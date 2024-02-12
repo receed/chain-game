@@ -21,6 +21,21 @@ body {
   margin: 0 auto;
 }
 
+label#expr {
+  font-size: x-large;
+}
+
+.blinking {
+  animation: blink 1s linear infinite;
+  animation-fill-mode: none;
+}
+
+@keyframes blink{
+  0%{color: rgba(0, 0, 0, 1);}
+  50%{color: rgba(0, 0, 0, 0.1);}
+  100%{color: rgba(0, 0, 0, 1);}
+}
+
 p.wrong {
   color: red;
   font-size: xx-large;
@@ -42,8 +57,8 @@ span.wrong {
 }
 .wheel .wheel-inner {
   position: relative;
-  width: 200px;
-  height: 350px;
+  width: 180px;
+  height: 320px;
   margin: 0;
   transform-style: preserve-3d;
   transition: all 1s;
@@ -54,26 +69,15 @@ span.wrong {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 40px;
   position: absolute;
   margin: auto;
   top: 0;
   bottom: 0;
   background-color: #c6ff89;
+  font-size: large;
+  transition: color 0.5s;
 }
 
 .wheel-inner .wheel-segment:nth-child(odd) {
   background-color: #94f8ff;
-}
-/* .wheel .wheel-inner .wheel-segment:nth-child(even) {
-  background-color: #ddd;
-} */
-
-@keyframes spin {
-  /* from {
-    transform: rotateX(0deg);
-  }
-  to {
-    transform: rotateX(30deg);
-  } */
 }
