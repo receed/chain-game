@@ -1,4 +1,6 @@
 const MAX_VALUE = 100
+const REAL_MUL = 10
+const MAX_VALUE_REAL = 30 * REAL_MUL
 const HIT_COUNT = 3
 const ITEMS = 24
 const SEGMENT_ANGLE = Math.PI * 2 / ITEMS;
@@ -10,7 +12,7 @@ function getRandomInt(min, max) {
 }
 
 function getRandomReal() {
-    return getRandomInt(1, 300) / 10
+    return getRandomInt(1, MAX_VALUE_REAL) / 10
 }
 
 function bernoulli(p) {
@@ -26,6 +28,29 @@ function randomSign(acc, probDecrease) {
 		return bernoulli(PROB_DIV) ? '/' : '-'
 	}
 	return bernoulli(0.5) ? '*' : '+'
+}
+
+function isInt(x) {
+	return Math.abs(x - Math.round(x)) < 1000 * Number.EPSILON
+}
+
+function genRealExpr(acc) {
+	let signs = Array.from('*+/')
+	let sel = signs.map(() => [])
+	for (let [idx, sign] of signs.entries()) {
+		for (let i = -MAX_VALUE_REAL; i <= MAX_VALUE_REAL; i++) {
+			let b = i / REAL_MUL
+			let result = eval(`${acc} ${sign} ${b}`)
+			let intResult = result * REAL_MUL
+			if (isInt(intResult)) {
+				sel[idx].push([b, Math.round(intResult) / REAL_MUL])
+			}
+		}
+	}
+	let signIdx = getRandomInt(0, 3)
+	let sign = signs[signIdx]
+	let [b, result] = sel[signIdx][getRandomInt(0, sel[signIdx].length - 1)]
+	return [`${sign} ${b}`, `${acc} ${sign} ${b} = `, result]
 }
 
 function generate(acc) {
