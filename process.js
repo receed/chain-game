@@ -34,6 +34,18 @@ function isInt(x) {
 	return Math.abs(x - Math.round(x)) < 1000 * Number.EPSILON
 }
 
+function setExpr(acc, sign, b, result) {
+	localStorage["sign"] = sign
+	localStorage["b"] = b
+	if (sign == '*')
+		sign = '×'
+	else if (sign == '/')
+		sign = ':'
+	localStorage["exprRight"] = `${sign} ${b}`
+	localStorage["exprStr"] = `${acc} ${sign} ${b} = `
+	localStorage["result"] = result
+}
+
 function genRealExpr(acc) {
 	let signs = Array.from('*+/')
 	let sel = signs.map(() => [])
@@ -42,18 +54,22 @@ function genRealExpr(acc) {
 			let b = i / REAL_MUL
 			let result = eval(`${acc} ${sign} ${b}`)
 			let intResult = result * REAL_MUL
-			if (isInt(intResult)) {
+			if (isInt(intResult) && Math.abs(intResult) <= MAX_VALUE_REAL) {
 				sel[idx].push([b, Math.round(intResult) / REAL_MUL])
 			}
 		}
 	}
-	let signIdx = getRandomInt(0, 3)
+	let signIdx = getRandomInt(0, 2)
 	let sign = signs[signIdx]
 	let [b, result] = sel[signIdx][getRandomInt(0, sel[signIdx].length - 1)]
-	return [`${sign} ${b}`, `${acc} ${sign} ${b} = `, result]
+	if (sign == '+' && b < 0) {
+		sign = '-'
+		b *= -1
+	}
+	setExpr(acc, sign, b, result)
 }
 
-function generate(acc) {
+function genIntExpr(acc) {
 	let probDecrease = localStorage["simpleCount"] >= 2 ? 0 : undefined
 	let sign = randomSign(acc, probDecrease)
 	for (let i = 0; ; i++) {
@@ -69,11 +85,11 @@ function generate(acc) {
 			else if (sign == '+')
 				lowerBound = 5
 		}
-		let b = localStorage["level"] == "2" ? getRandomReal() : getRandomInt(lowerBound, 9)
+		let b = getRandomInt(lowerBound, 9)
 		localStorage["sign"] = sign
 		localStorage["b"] = b
 		let result = eval(`${acc} ${sign} ${b}`)
-		if (localStorage["level"] == "1" && !(result >= 0 && result == Math.floor(result) && result <= MAX_VALUE))
+		if (!(result >= 0 && result == Math.floor(result) && result <= MAX_VALUE))
 			continue
 		if (result == acc || result == 0 || result == 1) {
 			if (localStorage["lastStupid"] < 6) {
@@ -89,12 +105,8 @@ function generate(acc) {
 		} else {
 			localStorage["simpleCount"] = 0
 		}
-		if (sign == '*')
-			sign = '×'
-		else if (sign == '/')
-			sign = ':'
-		result = Math.round(result * 100) / 100
-		return [`${sign} ${b}`, `${acc} ${sign} ${b} = `, result]
+		setExpr(acc, sign, b, result)
+		return
 	}
 }
 
@@ -113,15 +125,17 @@ function removeBlinking(elem) {
 }
 
 function updateExpr() {
-	let [exprRight, exprStr, result] = generate(localStorage["acc"]);
-	localStorage["exprRight"] = exprRight
-	localStorage["exprStr"] = exprStr
-	localStorage["result"] = result
+	let acc = localStorage["acc"]
+	if (localStorage["level"] == "2") {
+		genRealExpr(acc)
+	} else {
+		genIntExpr(acc)
+	}
 	// segments[0].classList.remove("blinking")
 	removeBlinking(segments[0])
 	// segments[0].style.opacity = "1"
 	rotateSegments()
-	segments[0].children[0].innerText = exprRight
+	segments[0].children[0].innerText = localStorage["exprRight"]
 	rotateSegments()
 	segments[0].classList.add("blinking")
 }
